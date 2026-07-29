@@ -2,12 +2,12 @@
 function carregar_config() {
     $arquivo = __DIR__ . '/config.json';
     if (!file_exists($arquivo)) {
-        die('Arquivo config.json nao encontrado. Copie config.json.example e preencha os dados.');
+        die('Arquivo config.json nao encontrado.');
     }
     $json = file_get_contents($arquivo);
     $config = json_decode($json, true);
-    if (!$config || empty($config['banco'])) {
-        die('Erro ao ler config.json. Verifique o formato.');
+    if (!$config) {
+        die('Erro ao ler config.json.');
     }
     return $config;
 }
@@ -16,9 +16,17 @@ function db() {
     static $pdo = null;
     if ($pdo === null) {
         $config = carregar_config();
-        $dsn = "firebird:dbname={$config['banco']};charset=WIN1252";
-        $usuario = $config['usuario'] ?? 'SYSDBA';
-        $senha = $config['senha'] ?? 'masterkey';
+        
+        if (isset($config['host'])) {
+            $dsn = "mysql:host={$config['host']};dbname={$config['banco']};charset=utf8";
+            $usuario = $config['usuario'] ?? 'root';
+            $senha = $config['senha'] ?? '';
+        } else {
+            $dsn = "firebird:dbname={$config['banco']};charset=WIN1252";
+            $usuario = $config['usuario'] ?? 'SYSDBA';
+            $senha = $config['senha'] ?? 'masterkey';
+        }
+        
         $pdo = new PDO($dsn, $usuario, $senha);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -28,7 +36,10 @@ function db() {
 
 function utf($texto) {
     if (!$texto) return '';
-    return iconv('WINDOWS-1252', 'UTF-8', $texto);
+    if (defined('PDO::ATTR_DRIVER_NAME') && db()->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
+        return $texto;
+    }
+    return @iconv('WINDOWS-1252', 'UTF-8//IGNORE', $texto);
 }
 
 function situacao_os($s) {
@@ -99,4 +110,15 @@ function icone_dispositivo($cat) {
         'Outros' => '&#128196;',
     ];
     return $map[$cat] ?? '&#128196;';
+}
+
+function is_firebird() {
+    return db()->getAttribute(PDO::ATTR_DRIVER_NAME) === 'firebird';
+}
+
+function limit_query($sql, $limite) {
+    if (is_firebird()) {
+        return $sql . " ROWS $limite";
+    }
+    return $sql . " LIMIT $limite";
 }

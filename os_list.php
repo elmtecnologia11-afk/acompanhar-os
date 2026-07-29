@@ -44,8 +44,8 @@ $sql = "
     FROM OS_MASTER OS
     $whereSQL
     ORDER BY OS.CODIGO DESC
-    ROWS 100
 ";
+$sql = limit_query($sql, 100);
 
 try {
     $stmt = $db->prepare($sql);
