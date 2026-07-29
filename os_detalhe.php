@@ -50,7 +50,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="30">
+    <meta http-equiv="refresh" content="10">
     <title>OS #<?= $codigo ?> - <?= htmlspecialchars(utf($os['NOME'] ?? '')) ?></title>
     <link rel="stylesheet" href="style.css">
 </head>

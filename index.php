@@ -31,7 +31,7 @@ if (empty($erro)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="30">
+    <meta http-equiv="refresh" content="10">
     <title>Acompanhar OS - Inicio</title>
     <link rel="stylesheet" href="style.css">
     <style>
