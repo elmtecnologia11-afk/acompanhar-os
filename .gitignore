@@ -1,3 +1,5 @@
-php/
-*.log
-*.tmp
+php/php.exe
+php/libssh2.dll
+php/ext/*
+!php/ext/php_pdo_firebird.dll
+!php/ext/fbclient.dll
