@@ -32,6 +32,7 @@ if (empty($erro)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="refresh" content="10">
+    <script>setTimeout(function(){ location.reload(); }, 10000);</script>
     <title>Acompanhar OS - Inicio</title>
     <link rel="stylesheet" href="style.css">
     <style>
